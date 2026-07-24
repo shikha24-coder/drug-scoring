@@ -1,43 +1,45 @@
+from pathlib import Path
 import streamlit as st
 import pandas as pd
 import duckdb
 import plotly.express as px
 import plotly.graph_objects as go
-from pathlib import Path
 
-# =====================================================
-# CONFIG
-# =====================================================
 BASE_DIR = Path(__file__).parent
-PARQUET_FILE = BASE_DIR / "merged_drug_data.parquet"
 
+PARQUET_FILE = BASE_DIR / "merged_drug_data.parquet"
 CLINICAL_PARQUET = BASE_DIR / "adverse_clinical_combined.parquet"
 
 st.set_page_config(
-
-page_title="Drug Discovery Dashboard",
-layout="wide"
+    page_title="Drug Discovery Dashboard",
+    layout="wide"
 )
 
 st.title("🔬 Drug Discovery Dashboard")
 
+
+
 # =====================================================
 # LOAD DATA
 # =====================================================
+# =====================================================
+# LOAD DATA
+# =====================================================
+
 @st.cache_data
 def load_data():
-query = f"""
-
-SELECT *
-
-FROM read_parquet('{PARQUET_FILE.as_posix()}')
-
-LIMIT 100000
-"""
+    query = f"""
+    SELECT *
+    FROM read_parquet('{PARQUET_FILE.as_posix()}')
+    LIMIT 100000
+    """
+    return duckdb.sql(query).df()
 
 df = load_data()
 
 st.success(f"Loaded {len(df):,} rows")
+
+
 # =====================================================
 # LOAD CLINICAL + ADVERSE DATA
 # =====================================================
