@@ -1,0 +1,91 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Set up R (PATH + packages)",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\setup_r.ps1"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Shiny app",
+      "type": "shell",
+      "command": "Rscript",
+      "args": [
+        "run_app.R"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "problemMatcher": [],
+      "windows": {
+        "command": "C:\\Users\\shikha1.roy\\AppData\\Local\\Programs\\R\\R-4.6.1\\bin\\Rscript.exe"
+      }
+    },
+    {
+      "label": "Rebuild data (prepare_data.R)",
+      "type": "shell",
+      "command": "Rscript",
+      "args": [
+        "prepare_data.R"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "problemMatcher": [],
+      "windows": {
+        "command": "C:\\Users\\shikha1.roy\\AppData\\Local\\Programs\\R\\R-4.6.1\\bin\\Rscript.exe"
+      }
+    },
+    {
+      "label": "Deploy to shinyapps.io",
+      "type": "shell",
+      "command": "Rscript",
+      "args": [
+        "-e",
+        "rsconnect::deployApp('shiny_app', appName = 'drug-scoring')"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "problemMatcher": [],
+      "windows": {
+        "command": "C:\\Users\\shikha1.roy\\AppData\\Local\\Programs\\R\\R-4.6.1\\bin\\Rscript.exe"
+      }
+    }
+  ]
+}

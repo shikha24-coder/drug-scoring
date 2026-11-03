@@ -1,0 +1,12 @@
+{
+  "r.rpath.windows": "C:\\Users\\shikha1.roy\\AppData\\Local\\Programs\\R\\R-4.6.1\\bin\\R.exe",
+  "r.rterm.windows": "C:\\Users\\shikha1.roy\\AppData\\Local\\Programs\\R\\R-4.6.1\\bin\\R.exe",
+  "shiny.rPath": "C:\\Users\\shikha1.roy\\AppData\\Local\\Programs\\R\\R-4.6.1\\bin\\R.exe",
+  "terminal.integrated.env.windows": {
+    "Path": "C:\\Users\\shikha1.roy\\AppData\\Local\\Programs\\R\\R-4.6.1\\bin;${env:Path}"
+  },
+  "r.bracketedPaste": true,
+  "r.sessionWatcher": true,
+  "files.associations": { "*.R": "r" },
+  "files.eol": "\n"
+}

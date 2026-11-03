@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drug Discovery Dashboard – Help</title>
+<style>
+  :root {
+    --bg: #F7F8FA; --surface: #FFFFFF; --text: #1F2933; --muted: #5B6675;
+    --rule: #DDE2E8; --accent: #2F5DA8; --accent-soft: #E6EDF8;
+    --code-bg: #EEF1F5; --warn: #9A5B13; --warn-soft: #FBF1E3;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14181D; --surface: #1C2229; --text: #E4E8EC; --muted: #9AA5B1;
+      --rule: #2E3640; --accent: #8DB0EA; --accent-soft: #22324A;
+      --code-bg: #242B33; --warn: #E3B06B; --warn-soft: #2F2618;
+      color-scheme: dark;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 1rem; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  h1, h2, h3 { font-family: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif; line-height: 1.25; }
+  h1 { font-size: 2.2rem; margin: 0 0 .4rem; }
+  h2 { font-size: 1.55rem; margin: 3rem 0 .8rem; padding-top: .4rem; border-top: 1px solid var(--rule); }
+  h3 { font-size: 1.15rem; margin: 2rem 0 .5rem; }
+  p, li { max-width: 72ch; }
+  a { color: var(--accent); }
+  a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  code, pre, kbd { font-family: ui-monospace, "Cascadia Code", Consolas, "Liberation Mono", monospace; font-size: .9em; }
+  code { background: var(--code-bg); padding: .1em .35em; border-radius: .25rem; }
+  pre { background: var(--code-bg); padding: .9rem 1rem; border-radius: .4rem; overflow-x: auto; line-height: 1.45; }
+  pre code { background: none; padding: 0; }
+  kbd { border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: .25rem; padding: .05em .4em; background: var(--surface); }
+
+  .layout { display: grid; grid-template-columns: 15rem minmax(0, 1fr); gap: 3rem; max-width: 72rem; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+  nav.toc { position: sticky; top: 1.5rem; align-self: start; font-size: .93rem; }
+  nav.toc p { font-weight: 600; margin: 0 0 .5rem; }
+  nav.toc ol { list-style: none; margin: 0; padding: 0; }
+  nav.toc li { margin: .3rem 0; }
+  nav.toc a { color: var(--muted); text-decoration: none; }
+  nav.toc a:hover { color: var(--accent); text-decoration: underline; }
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; gap: 1rem; }
+    nav.toc { position: static; border-bottom: 1px solid var(--rule); padding-bottom: 1rem; }
+  }
+  .lede { font-size: 1.1rem; color: var(--muted); }
+
+  .table-wrap { overflow-x: auto; margin: 1rem 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .93rem; background: var(--surface); }
+  th, td { text-align: left; vertical-align: top; padding: .55rem .75rem; border-bottom: 1px solid var(--rule); }
+  th { font-weight: 600; }
+
+  /* Function reference entries */
+  .fn { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--accent); border-radius: .4rem; padding: .9rem 1.1rem; margin: 1rem 0; }
+  .fn h4 { margin: 0 0 .35rem; font-size: 1rem; font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-weight: 600; }
+  .fn .where { color: var(--muted); font-size: .85rem; margin-left: .5rem; font-family: system-ui, sans-serif; font-weight: 400; }
+  .fn p { margin: .35rem 0; }
+  .fn dl { display: grid; grid-template-columns: max-content 1fr; gap: .25rem 1rem; margin: .5rem 0 0; font-size: .93rem; }
+  .fn dt { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; }
+  .fn dd { margin: 0; }
+
+  .callout { background: var(--warn-soft); border-left: 4px solid var(--warn); padding: .7rem 1rem; border-radius: .3rem; margin: 1rem 0; }
+  .flow { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin: 1rem 0; }
+  .flow span { background: var(--surface); border: 1px solid var(--rule); border-radius: .4rem; padding: .45rem .75rem; font-size: .93rem; }
+  .flow b { color: var(--muted); font-weight: 400; }
+  details { margin: .6rem 0; background: var(--surface); border: 1px solid var(--rule); border-radius: .4rem; padding: .6rem 1rem; }
+  summary { cursor: pointer; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Contents">
+  <p>Contents</p>
+  <ol>
+    <li><a href="#start">Run it in VS Code</a></li>
+    <li><a href="#layout">Project files</a></li>
+    <li><a href="#flow">How the data flows</a></li>
+    <li><a href="#data">Data tables</a></li>
+    <li><a href="#using">Using the dashboard</a></li>
+    <li><a href="#risk">Risk score</a></li>
+    <li><a href="#run-app">run_app.R</a></li>
+    <li><a href="#prepare">prepare_data.R</a></li>
+    <li><a href="#helpers">app.R: helpers</a></li>
+    <li><a href="#server">app.R: server logic</a></li>
+    <li><a href="#outputs">app.R: outputs by tab</a></li>
+    <li><a href="#deploy">Update and deploy</a></li>
+    <li><a href="#trouble">Troubleshooting</a></li>
+  </ol>
+</nav>
+
+<main>
+<h1>Drug Discovery Dashboard</h1>
+<p class="lede">A Shiny for R dashboard for exploring drug–disease–target links, clinical development, adverse events and drug risk scores. This page explains how to run it and what every function does.</p>
+
+<!-- ===================================================================== -->
+<h2 id="start">Run it in VS Code</h2>
+<ol>
+  <li>Install R from <a href="https://cran.r-project.org">cran.r-project.org</a>.</li>
+  <li>In VS Code choose <b>File → Open Folder</b> and open the <code>drug-scoring</code> folder.</li>
+  <li>Press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd>, or open <b>Terminal → New Terminal</b> and type:
+<pre><code>Rscript run_app.R</code></pre></li>
+  <li>The first run installs packages. When the terminal shows <code>Listening on http://127.0.0.1:3838</code>, the dashboard opens in your browser.</li>
+  <li>To stop it, click in the terminal and press <kbd>Ctrl</kbd>+<kbd>C</kbd>.</li>
+</ol>
+<p>Other tasks are under <b>Terminal → Run Task</b>: <i>Rebuild data (prepare_data.R)</i> and <i>Deploy to shinyapps.io</i>.</p>
+
+<!-- ===================================================================== -->
+<h2 id="layout">Project files</h2>
+<pre><code>drug-scoring/
+├── run_app.R                  starts the app (installs packages if needed)
+├── prepare_data.R             turns the raw parquet files into shiny_app/data/
+├── .vscode/
+│   ├── tasks.json             Ctrl+Shift+B and the other VS Code tasks
+│   ├── extensions.json        recommends the R extension
+│   └── settings.json
+└── shiny_app/                 deploy this folder
+    ├── app.R                  the dashboard
+    ├── README.md
+    ├── www/help.html          this page (the Help link in the app)
+    └── data/
+        ├── drugs.parquet
+        ├── drug_disease_targets.parquet
+        ├── adverse_events.parquet
+        └── clinical_reports.parquet</code></pre>
+
+<!-- ===================================================================== -->
+<h2 id="flow">How the data flows</h2>
+<div class="flow" aria-label="Data flow">
+  <span>Raw parquet files in repo root</span><b>→</b>
+  <span><code>prepare_data.R</code> (run once)</span><b>→</b>
+  <span><code>shiny_app/data/*.parquet</code></span><b>→</b>
+  <span><code>app.R</code> reads at start-up</span><b>→</b>
+  <span>Sidebar filters</span><b>→</b>
+  <span>Charts and tables</span>
+</div>
+<p>The app never reads the raw files. It only reads the four small tables in <code>shiny_app/data/</code>, so the folder is self-contained and can be deployed as it is.</p>
+<div class="callout">
+  The raw files repeat the same rows many times (<code>merged_drug_data.parquet</code> has 992,147 rows but only 9 drugs and 20 drug–disease–target links). <code>prepare_data.R</code> removes the repeats. This keeps memory use low and stops repeated rows from inflating report totals and link sizes.
+</div>
+
+<!-- ===================================================================== -->
+<h2 id="data">Data tables</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>File</th><th>One row per</th><th>Main columns</th></tr></thead>
+  <tbody>
+    <tr><td><code>drugs.parquet</code></td><td>drug (9)</td><td>drug_name, chembl_id, drug_type, maximum_clinical_stage_summary, description, mechanism_of_action, action_type, target_symbol, class_label, toxicity_class, warning_type, pgx_category, phenotype_text, opentargets_url</td></tr>
+    <tr><td><code>drug_disease_targets.parquet</code></td><td>drug–disease–target link (20)</td><td>drug_name, disease_id, disease_name, therapeutic_area_names, maximum_clinical_stage, target, target_ensembl_id</td></tr>
+    <tr><td><code>adverse_events.parquet</code></td><td>drug × adverse event (355)</td><td>drug_name, adverse_event_name, report_count, log_likelihood_ratio, critical_value, total_significant_adverse_events</td></tr>
+    <tr><td><code>clinical_reports.parquet</code></td><td>drug × clinical report (2,112)</td><td>drug_name, disease_name, report_id, source, title, clinical_stage, trial_phase, trial_study_type, trial_overall_status, trial_start_date, url</td></tr>
+  </tbody>
+</table></div>
+<p>Columns with several values for one drug (for example two mechanisms) are joined with <code>; </code> in <code>drugs.parquet</code>.</p>
+
+<!-- ===================================================================== -->
+<h2 id="using">Using the dashboard</h2>
+<h3>Sidebar filters</h3>
+<p><b>Drugs</b> limits every tab to the drugs you pick (leave it empty for all). <b>Search drug name</b> keeps drugs whose name contains the text, ignoring case; “mab” finds all the antibodies. Both filters can be used together.</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Tab</th><th>What it shows</th></tr></thead>
+  <tbody>
+    <tr><td>Overview</td><td>Counts of drugs, diseases, targets, clinical reports and adverse events, plus a table describing each drug and its risk score.</td></tr>
+    <tr><td>Disease &amp; targets</td><td>Sankey, sunburst, treemap and heatmap of disease → target links, then the top diseases and targets. Size = number of drugs linking a disease to a target.</td></tr>
+    <tr><td>Clinical development</td><td>Clinical stage funnel, trial phase donut and study type treemap, counted over clinical reports.</td></tr>
+    <tr><td>Risk scores</td><td>Top 20 drugs by risk score, risk category split, a risk matrix (total reports vs average LLR) and the full ranking table.</td></tr>
+    <tr><td>Adverse events</td><td>Summary numbers, top 25 events by reports, reports vs signal strength, distributions, an event table and a drug → adverse event Sankey (slider sets events per drug).</td></tr>
+    <tr><td>Data</td><td>Browse any of the four tables with the current filters and download them as CSV.</td></tr>
+  </tbody>
+</table></div>
+<p>Every chart card has an expand button (bottom right) for full screen. Tables can be searched and filtered per column.</p>
+
+<!-- ===================================================================== -->
+<h2 id="risk">Risk score</h2>
+<p>The same formula as the original Streamlit dashboard, worked out for each drug:</p>
+<pre><code>risk score = 0.50 × mean(LLR / max LLR)
+           + 0.30 × mean(reports / max reports)
+           + 0.20 × mean(stage weight) / max stage weight</code></pre>
+<p>LLR is the log-likelihood ratio of each adverse event (signal strength). The maximums are taken over all drugs, so a drug’s score doesn’t change when you filter.</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Clinical stage</th><th>Weight</th></tr></thead>
+  <tbody>
+    <tr><td>APPROVAL</td><td>1</td></tr><tr><td>PHASE_4</td><td>2</td></tr>
+    <tr><td>PHASE_3, UNKNOWN and any other value</td><td>3</td></tr>
+    <tr><td>PHASE_2</td><td>4</td></tr><tr><td>PHASE_1, EARLY_PHASE_1</td><td>5</td></tr>
+  </tbody>
+</table></div>
+<p>Categories: Low (0–0.25), Moderate (0.25–0.50), High (0.50–0.75), Critical (0.75–1). This is a screening heuristic, not a validated clinical measure.</p>
+
+<!-- ===================================================================== -->
+<h2 id="run-app">Function reference: run_app.R</h2>
+<p>A start-up script rather than a set of functions. In order, it:</p>
+<ol>
+  <li>Checks for the packages <code>shiny</code>, <code>bslib</code>, <code>nanoparquet</code>, <code>plotly</code> and <code>DT</code>, and installs any that are missing from CRAN.</li>
+  <li>Finds the <code>shiny_app</code> folder next to the script, so it works from any working directory.</li>
+  <li>Starts the app with <code>shiny::runApp()</code> on port 3838 (or the <code>PORT</code> environment variable) and opens your browser. Set <code>OPEN_BROWSER=0</code> to stop the browser opening.</li>
+</ol>
+
+<!-- ===================================================================== -->
+<h2 id="prepare">Function reference: prepare_data.R</h2>
+
+<div class="fn">
+  <h4>collapse_unique(x)</h4>
+  <p>Joins the distinct, non-empty values of <code>x</code> into one sorted string separated by <code>; </code>. Returns <code>NA</code> when nothing is left. Used to make one row per drug when a field has several values.</p>
+  <dl><dt>x</dt><dd>a vector of values for one drug</dd></dl>
+</div>
+
+<div class="fn">
+  <h4>distinct_cols(df, cols)</h4>
+  <p>Keeps only <code>cols</code> (those that exist in <code>df</code>) and drops duplicate rows. This is what removes the repeated rows from the raw files.</p>
+  <dl><dt>df</dt><dd>a data frame</dd><dt>cols</dt><dd>column names to keep</dd></dl>
+</div>
+
+<h3>What the script does, step by step</h3>
+<ol>
+  <li><b>Drugs and links:</b> reads the needed columns of <code>merged_drug_data.parquet</code>, builds <code>drug_disease_targets</code> (distinct links, with <code>approved_symbol</code> renamed to <code>target</code>) and <code>drugs</code> (one row per drug, using <code>collapse_unique</code>).</li>
+  <li><b>Adverse events:</b> reads <code>adverse_clinical_combined.parquet</code> and keeps the distinct drug × event rows.</li>
+  <li><b>Clinical reports:</b> the raw file repeats each drug’s reports once per adverse event, so it keeps the rows belonging to the first adverse event of each drug. This recovers the report list exactly. 16 rows with no drug name are dropped.</li>
+  <li><b>Write:</b> saves the four tables to <code>shiny_app/data/</code> and prints their row counts and sizes.</li>
+</ol>
+
+<!-- ===================================================================== -->
+<h2 id="helpers">Function reference: app.R helpers</h2>
+<p>Defined at the top of <code>app.R</code>. They run once when the app starts or are called by the outputs.</p>
+
+<div class="fn">
+  <h4>read_tbl(name)</h4>
+  <p>Reads one parquet file from the data folder and returns a plain data frame. The data folder is found automatically: <code>data/</code> when R runs inside <code>shiny_app</code>, or <code>shiny_app/data/</code> from the project folder.</p>
+  <dl><dt>name</dt><dd>file name, for example <code>"drugs.parquet"</code></dd></dl>
+</div>
+
+<div class="fn">
+  <h4>compute_risk(ae, cl)</h4>
+  <p>Calculates the <a href="#risk">risk score</a> for each drug and returns a table sorted from highest to lowest risk with <code>drug_name</code>, <code>Risk_Score</code>, <code>Risk_Category</code>, <code>Reports</code> (sum over distinct events) and <code>Avg_LLR</code>. It runs once at start-up on the full data and is stored in <code>drug_risk_all</code>.</p>
+  <dl><dt>ae</dt><dd>the adverse events table</dd><dt>cl</dt><dd>the clinical reports table</dd></dl>
+</div>
+
+<div class="fn">
+  <h4>count_by(x, top = Inf)</h4>
+  <p>Counts how often each value appears in <code>x</code>, ignoring blanks and <code>NA</code>, and returns a data frame with <code>label</code> and <code>n</code>, most common first. Used for the pie, funnel and treemap charts.</p>
+  <dl><dt>x</dt><dd>a vector, for example clinical stages</dd><dt>top</dt><dd>keep only the first <i>n</i> values</dd></dl>
+</div>
+
+<div class="fn">
+  <h4>plain(p, ...)</h4>
+  <p>Gives a plotly chart the dashboard’s shared look: transparent background, the app font, tight margins and no toolbar. Extra arguments go to <code>plotly::layout()</code>, for example axis titles.</p>
+  <dl><dt>p</dt><dd>a plotly chart</dd><dt>...</dt><dd>extra layout settings</dd></dl>
+</div>
+
+<div class="fn">
+  <h4>sankey(from, to, value, node_color)</h4>
+  <p>Draws a two-column Sankey diagram. Each position in <code>from</code>, <code>to</code> and <code>value</code> is one link. Used for disease → target and drug → adverse event.</p>
+  <dl>
+    <dt>from, to</dt><dd>names of the left and right nodes</dd>
+    <dt>value</dt><dd>link widths</dd>
+    <dt>node_color</dt><dd>two colours: left nodes, right nodes</dd>
+  </dl>
+</div>
+
+<div class="fn">
+  <h4>hierarchy(parent, child, value, type)</h4>
+  <p>Draws a two-level sunburst or treemap. Parent sizes are the sum of their children.</p>
+  <dl>
+    <dt>parent, child</dt><dd>for example disease and target</dd>
+    <dt>value</dt><dd>size of each child</dd>
+    <dt>type</dt><dd><code>"sunburst"</code> or <code>"treemap"</code></dd>
+  </dl>
+</div>
+
+<div class="fn">
+  <h4>table_dt(df, page = 10)</h4>
+  <p>Shows a data frame as an interactive table with search, per-column filters and paging.</p>
+  <dl><dt>df</dt><dd>data frame to show</dd><dt>page</dt><dd>rows per page</dd></dl>
+</div>
+
+<div class="fn">
+  <h4>chart_card(title, output, note = NULL, height = "420px")</h4>
+  <p>UI building block: a card with a title, an optional note and a plotly chart, with a full-screen button.</p>
+  <dl>
+    <dt>title</dt><dd>card heading</dd>
+    <dt>output</dt><dd>id of the <code>renderPlotly</code> output to show</dd>
+    <dt>note</dt><dd>optional explanation under the title</dd>
+    <dt>height</dt><dd>chart height</dd>
+  </dl>
+</div>
+
+<!-- ===================================================================== -->
+<h2 id="server">Function reference: app.R server logic</h2>
+<p>Inside <code>server()</code>. Reactive values recalculate automatically when the filters change, and every chart that uses them redraws.</p>
+
+<div class="fn">
+  <h4>selected() <span class="where">reactive</span></h4>
+  <p>The list of drug names that pass the sidebar filters: the drugs picked in <b>Drugs</b> (or all), then those whose name contains the <b>Search</b> text. Everything else in the app is built from this.</p>
+</div>
+
+<div class="fn">
+  <h4>f_drugs(), f_links(), f_adverse(), f_clinical(), f_risk() <span class="where">reactive</span></h4>
+  <p>Each of the four data tables, and the risk table, filtered to <code>selected()</code> drugs.</p>
+</div>
+
+<div class="fn">
+  <h4>need_rows(df)</h4>
+  <p>Stops an output and shows “No data for the selected drugs.” when <code>df</code> is empty, instead of an error.</p>
+</div>
+
+<div class="fn">
+  <h4>fmt(x)</h4>
+  <p>Formats a number with thousands separators, for example 1047621 → 1,047,621.</p>
+</div>
+
+<div class="fn">
+  <h4>pair_counts() <span class="where">reactive</span></h4>
+  <p>For the filtered links, counts how many distinct drugs connect each disease to each target. Feeds the Sankey, sunburst, treemap and heatmap on the Disease &amp; targets tab.</p>
+</div>
+
+<div class="fn">
+  <h4>ae_summary() <span class="where">reactive</span></h4>
+  <p>One row per adverse event across the filtered drugs: total reports, average LLR and number of drugs, sorted by reports. Returns an empty table when no drug has adverse event data.</p>
+</div>
+
+<div class="fn">
+  <h4>ae_stat(f)</h4>
+  <p>Builds a value box output from <code>ae_summary()</code> using the function <code>f</code>, showing “—” when there’s no data. Used for Unique events, Total reports, Average reports and Max LLR.</p>
+</div>
+
+<div class="fn">
+  <h4>current_table() <span class="where">reactive</span></h4>
+  <p>The filtered table chosen on the Data tab. Shown in the preview and saved by the download button.</p>
+</div>
+
+<!-- ===================================================================== -->
+<h2 id="outputs">Function reference: outputs by tab</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Tab</th><th>Output id</th><th>Built from</th></tr></thead>
+  <tbody>
+    <tr><td>Sidebar</td><td><code>filter_note</code></td><td><code>selected()</code></td></tr>
+    <tr><td>Overview</td><td><code>vb_drugs</code>, <code>vb_diseases</code>, <code>vb_targets</code>, <code>vb_reports</code>, <code>vb_events</code></td><td>filtered tables</td></tr>
+    <tr><td>Overview</td><td><code>drug_table</code></td><td><code>f_drugs()</code>, links, <code>drug_risk_all</code></td></tr>
+    <tr><td>Disease &amp; targets</td><td><code>sankey_dt</code>, <code>sunburst_dt</code>, <code>treemap_dt</code>, <code>heatmap_dt</code></td><td><code>pair_counts()</code></td></tr>
+    <tr><td>Disease &amp; targets</td><td><code>top_diseases</code>, <code>top_targets</code></td><td><code>f_links()</code>, <code>count_by()</code></td></tr>
+    <tr><td>Clinical development</td><td><code>stage_funnel</code>, <code>phase_pie</code>, <code>study_treemap</code></td><td><code>f_clinical()</code>, <code>count_by()</code></td></tr>
+    <tr><td>Risk scores</td><td><code>risk_bar</code>, <code>risk_pie</code>, <code>risk_matrix</code>, <code>risk_table</code></td><td><code>f_risk()</code></td></tr>
+    <tr><td>Adverse events</td><td><code>ae_unique</code>, <code>ae_total</code>, <code>ae_avg</code>, <code>ae_maxllr</code></td><td><code>ae_stat()</code></td></tr>
+    <tr><td>Adverse events</td><td><code>ae_bar</code>, <code>ae_scatter</code>, <code>ae_hist</code>, <code>ae_box</code>, <code>ae_table</code></td><td><code>ae_summary()</code></td></tr>
+    <tr><td>Adverse events</td><td><code>sankey_ae</code></td><td><code>f_adverse()</code>, slider <code>ae_per_drug</code></td></tr>
+    <tr><td>Data</td><td><code>data_preview</code>, <code>download</code></td><td><code>current_table()</code></td></tr>
+  </tbody>
+</table></div>
+
+<!-- ===================================================================== -->
+<h2 id="deploy">Update and deploy</h2>
+<h3>Change the data</h3>
+<ol>
+  <li>Replace <code>merged_drug_data.parquet</code> and <code>adverse_clinical_combined.parquet</code> in the project folder.</li>
+  <li>Run <b>Terminal → Run Task → Rebuild data</b>, or <code>Rscript prepare_data.R</code>.</li>
+  <li>Restart the app.</li>
+</ol>
+<h3>Publish to shinyapps.io</h3>
+<ol>
+  <li>Once: <code>install.packages("rsconnect")</code>, then copy the <code>rsconnect::setAccountInfo(...)</code> line from shinyapps.io (Account → Tokens → Show) and run it in R.</li>
+  <li>Run <b>Terminal → Run Task → Deploy to shinyapps.io</b>, or:
+<pre><code>Rscript -e "rsconnect::deployApp('shiny_app', appName = 'drug-scoring')"</code></pre></li>
+</ol>
+
+<!-- ===================================================================== -->
+<h2 id="trouble">Troubleshooting</h2>
+<details>
+  <summary>'Rscript' is not recognized</summary>
+  <p>R isn’t on your PATH. Use the full path (match your R version in <code>C:\Program Files\R\</code>):</p>
+<pre><code>&amp; "C:\Program Files\R\R-4.4.1\bin\Rscript.exe" run_app.R</code></pre>
+  <p>To fix it permanently, add that <code>bin</code> folder to Path under <b>Edit the system environment variables → Environment Variables</b>, then restart VS Code.</p>
+</details>
+<details>
+  <summary>Can't find the data folder</summary>
+  <p>Open the whole <code>drug-scoring</code> folder in VS Code (<b>File → Open Folder</b>), not just <code>app.R</code>, and start with <code>run_app.R</code>. Check that <code>shiny_app/data/</code> contains the four parquet files; if not, run <code>prepare_data.R</code>.</p>
+</details>
+<details>
+  <summary>Port 3838 is already in use</summary>
+  <p>An earlier copy of the app is still running. Press <kbd>Ctrl</kbd>+<kbd>C</kbd> in its terminal, or use another port: in PowerShell run <code>$env:PORT=3839; Rscript run_app.R</code>.</p>
+</details>
+<details>
+  <summary>A package fails to install</summary>
+  <p>Run the install yourself and read the error: <code>Rscript -e "install.packages('plotly')"</code>. If it asks whether to install from sources, answer <code>n</code>.</p>
+</details>
+<details>
+  <summary>A chart says “No data for the selected drugs.”</summary>
+  <p>The filtered drugs have no records of that kind. For example, Etrolizumab has disease–target links but no adverse event or clinical report data. Clear the filters to see everything.</p>
+</details>
+</main>
+</div>
+</body>
+</html>
